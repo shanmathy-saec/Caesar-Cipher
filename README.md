@@ -1,52 +1,41 @@
-def caesar_cipher(text, shift, mode): 
+def caesar_cipher(text, shift, mode='encrypt'):
+    if mode == 'decrypt':
+        shift = -shift
 
-    result = "" 
-
-    for char in text: 
-
+    result = ""
+    for char in text:
         if char.isalpha(): 
+            base = ord('A') if char.isupper() else ord('a')
+            
+            new_char = chr((ord(char) - base + shift) % 26 + base)
+            result += new_char
+        else:
+            
+            result += char
 
-            if mode == "encrypt": 
+    return result
 
-                shift_char = chr((ord(char) + shift - 65) % 26 + 65) 
+if __name__ == "__main__":
+    print("Welcome to the Caesar Cipher Tool!")
+    while True:
+        mode = input("Do you want to encrypt or decrypt a message? (enter 'encrypt' or 'decrypt'): ").strip().lower()
+        if mode not in ['encrypt', 'decrypt']:
+            print("Invalid option. Please enter 'encrypt' or 'decrypt'.")
+            continue
 
-            elif mode == "decrypt": 
+        text = input("Enter your message: ").strip()
+        try:
+            shift = int(input("Enter the shift value (integer): "))
+        except ValueError:
+            print("Shift value must be an integer. Try again.")
+            continue
 
-                shift_char = chr((ord(char) - shift - 65) % 26 + 65) 
+        
+        result = caesar_cipher(text, shift, mode)
+        print(f"The resulting message is: {result}")
 
-            result += shift_char 
-
-        else: 
-
-            result += char 
-
-    return result 
-
- 
-
-# Get user input 
-text = input("Enter the text: ") 
-
-shift = int(input("Enter the shift value: ")) 
-
-mode = input("Enter mode (encrypt/decrypt): ") 
-
- 
-
-# Call the function and print the result 
-
-if mode == "encrypt": 
-
-    encrypted_text = caesar_cipher(text, shift, mode) 
-
-    print("Encrypted text:", encrypted_text) 
-
-elif mode == "decrypt": 
-
-    decrypted_text = caesar_cipher(text, shift, mode) 
-
-    print("Decrypted text:", decrypted_text) 
-
-else: 
-
-    print("Invalid mode. Please enter 'encrypt' or 'decrypt'.") 
+        
+        again = input("Do you want to process another message? (yes/no): ").strip().lower()
+        if again != 'yes':
+            print("Goodbye!")
+            break
